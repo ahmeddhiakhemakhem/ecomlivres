@@ -9,7 +9,17 @@ import { useRouter } from "next/navigation";
 import { addLivre } from '@/services/livreService';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import axios from 'axios';
+import { FilePond, registerPlugin } from 'react-filepond'
+import 'filepond/dist/filepond.min.css';
+
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
 const NewLivre = ({ LesEditeurs, lesSpecialites, lesAuteurs }) => {
+    const [files, setFiles] = useState([]);
     const router = useRouter();
     const [isbn, setIsbn] = useState("");
     const [titre, setTitre] = useState("");
@@ -59,7 +69,36 @@ const NewLivre = ({ LesEditeurs, lesSpecialites, lesAuteurs }) => {
         setSpecialite("")
         setMaised("")
         setAuteurs([])
+        setFiles([])
     }
+    const serverOptions = () => {
+        console.log('server pond');
+        return {
+            process: (fieldName, file, metadata, load, error, progress, abort) => {
+                console.log(file)
+                const data = new FormData();
+                data.append('file', file);
+                data.append('upload_preset', 'nextjsimage');
+                data.append('cloud_name', 'dqaidlbwn');
+                data.append('public_id', file.name);
+                axios.post('https://api.cloudinary.com/v1_1/dqaidlbwn/image/upload',
+                    data)
+                    .then((response) => response.data)
+                    .then((data) => {
+                        console.log(data);
+                        setCouverture(data.url);
+                        load(data);
+                    })
+                    .catch((error) => {
+                        console.error('Error uploading file:', error);
+                        error('Upload failed');
+                        abort();
+                    });
+
+            },
+        };
+    };
+
 
     return (
         <div>
@@ -143,18 +182,19 @@ const NewLivre = ({ LesEditeurs, lesSpecialites, lesAuteurs }) => {
                                 </Form.Group>
                                 <Form.Group className="col-md-6">
                                     <Form.Label>Couverture *</Form.Label>
-                                    <InputGroup hasValidation>
-                                        <Form.Control
-                                            type="text"
-                                            required
-                                            placeholder="Couverture"
-                                            value={couverture}
-                                            onChange={(e) => setCouverture(e.target.value)}
+                                    <div style={{ width: "80%", margin: "auto", padding: "1%" }}>
+                                        <FilePond
+
+                                            files={files}
+                                            acceptedFileTypes="image/*"
+                                            onupdatefiles={setFiles}
+                                            allowMultiple={false}
+
+                                            server={serverOptions()}
+                                            name="file"
+
                                         />
-                                        <Form.Control.Feedback type="invalid">
-                                            Couverture Incorrecte
-                                        </Form.Control.Feedback>
-                                    </InputGroup>
+                                    </div>
                                 </Form.Group>
                             </Row>
                             <Row className="mb-2">

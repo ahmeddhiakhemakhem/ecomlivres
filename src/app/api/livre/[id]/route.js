@@ -9,7 +9,7 @@ export async function GET(_, { params }) {
             Livre.findById(params.id).populate('auteurs').populate('specialite').populate(
                 'maised')
         if (livre) {
-            return NextResponse.json(livre);
+            return NextResponse.json({ livre });
         }
         return NextResponse.json({ message: `Livre ${params.id} not found` },
             { status: HttpStatusCode.NotFound });
