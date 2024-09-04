@@ -5,7 +5,7 @@ export const fetchAuteur = async () => {
             'no-store'
     })
     const response = await res.json();
-    return response;
+    return response.auteurs;
 }
 export const fetchAuteurById = async (auteurId) => {
     const res = await
@@ -15,7 +15,7 @@ export const fetchAuteurById = async (auteurId) => {
             method: 'GET'
         });
     const response = await res.json();
-    return response;
+    return response.auteurs;
 }
 export const deleteAuteur = async (auteurId) => {
     const res = await

@@ -1,11 +1,12 @@
 const SPECIALITE_API = "/specialite/"
-export const fetchSpecialites = async () => {
+export const fetchSpecialite = async () => {
     const res = await fetch(process.env.NEXT_PUBLIC_API_URL + SPECIALITE_API, {
         cache:
             'no-store'
     })
     const response = await res.json();
-    return response;
+    
+    return response.specialite;
 }
 export const fetchSpecialiteById = async (specialiteId) => {
     const res = await
@@ -15,7 +16,7 @@ export const fetchSpecialiteById = async (specialiteId) => {
             method: 'GET'
         });
     const response = await res.json();
-    return response;
+    return response.specialite;
 }
 export const deleteSpecialite = async (specialiteId) => {
     const res = await

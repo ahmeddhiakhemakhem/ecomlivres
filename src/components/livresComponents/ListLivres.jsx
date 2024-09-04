@@ -2,8 +2,30 @@
 import { useMemo } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { Box } from '@mui/material';
+import { deleteLivre } from "@/services/livreService"
+import { useRouter } from 'next/navigation';
+import Button from 'react-bootstrap/Button';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Link from 'next/link';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-const ListLivres = ({livre}) => {
+const ListLivres = ({ livre }) => {
+    const router = useRouter();
+    const deletelivre = (id) => {
+        if (window.confirm("supprimer Livre O/N")) {
+            deleteLivre(id)
+                .then((res) => {
+                    console.log(res)
+                    router.refresh()
+                })
+
+                .catch(error => {
+                    console.log(error)
+                })
+
+        }
+    }
     const columns = useMemo(
         () => [
             {
@@ -70,11 +92,56 @@ const ListLivres = ({livre}) => {
 
                 size: 50,
             },
+
+            {
+                accessorKey: '_id',
+                header: 'actions',
+                size: 50,
+                Cell: ({ cell, row }) => (
+                    <div ><Button
+                        size="md"
+                        className="text-primary btn-link edit"
+                    >
+                        <Link
+
+                            href={`/admin/livre/updateLivre/${cell.row.original._id}`}>
+
+                            <EditOutlinedIcon />
+                        </Link>
+                    </Button>
+                        <Button
+                            onClick={(e) => {
+                                deletelivre(cell.row.original._id, e);
+                            }}
+                            variant="danger"
+                            size="md"
+                            className="text-danger btn-link delete"
+                        >
+                            <DeleteForeverIcon />
+                        </Button>
+                    </div>
+                ),
+            },
         ],
         [livre],
     );
     return (
         <div>
+            <Button
+                variant='dark'
+                size="sm"
+            >
+                <Link
+                    href="/admin/livre/newlivre"
+                    style={{
+                        textDecoration: 'none',
+                        color: 'pink',
+                        fontSize: 14,
+                    }}
+                >
+                    <AddCircleOutlineIcon /> Nouveau
+                </Link>
+            </Button>
             <MaterialReactTable columns={columns} data={livre} />;
         </div>
     )

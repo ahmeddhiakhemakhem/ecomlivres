@@ -35,7 +35,7 @@ export async function GET() {
                     1
             }
         }).populate('auteurs').populate('specialite').populate('maised')
-        return NextResponse.json(livres);
+        return NextResponse.json({ livres });
     } catch (error) {
         return NextResponse.json({ error: error });
     }

@@ -5,7 +5,8 @@ export const fetchLivre = async () => {
             'no-store'
     })
     const response = await res.json();
-    return response;
+
+    return response.livres;
 }
 export const fetchLivreById = async (livreId) => {
     const res = await
@@ -15,7 +16,7 @@ export const fetchLivreById = async (livreId) => {
             method: 'GET'
         });
     const response = await res.json();
-    return response;
+    return response.livre;
 }
 export const deleteLivre = async (livreId) => {
     const res = await

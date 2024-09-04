@@ -5,7 +5,7 @@ export const fetchEditeur = async () => {
             'no-store'
     })
     const response = await res.json();
-    return response;
+    return response.editeur;
 }
 export const fetchEditeurById = async (editeurId) => {
     const res = await
@@ -15,7 +15,7 @@ export const fetchEditeurById = async (editeurId) => {
             method: 'GET'
         });
     const response = await res.json();
-    return response;
+    return response.editeur;
 }
 export const deleteEditeur = async (editeurId) => {
     const res = await
