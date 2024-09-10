@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Menu from "@/components/client/menu";
 import AuthProvider from '@/providers/authProvider';
 import connectDB from '@/lib/connectDB';
+import CartsProvider from '@/providers/cartsProvider';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +19,13 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+      <CartsProvider>
 
         <AuthProvider>
           <Menu />
           {children}
         </AuthProvider>
+        </CartsProvider>
 
       </body>
     </html>
